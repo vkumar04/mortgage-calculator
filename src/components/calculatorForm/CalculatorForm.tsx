@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
-interface MortgageFormData {
-  loanAmount: number;
-  interestRate: number;
-  loanTerm: number;
-}
+import { MortgageFormData, amortizationData } from "../../types";
+import { calculateSchedule } from "../../util/calculateSchedule";
+import { calculateMonthlyPayment } from "../../util/monthlyPayment";
 
 export const CalculatorForm = () => {
   const {
@@ -15,22 +12,16 @@ export const CalculatorForm = () => {
   } = useForm<MortgageFormData>();
 
   const [payment, setPayment] = useState<number>(0);
-
-  const calculateMonthlyPayment = (data: MortgageFormData): number => {
-    const { loanAmount, interestRate, loanTerm } = data;
-    const monthlyInterestRate = interestRate / 100 / 12;
-    const numberOfPayments = loanTerm * 12;
-
-    const monthlyPayment =
-      (loanAmount * monthlyInterestRate) /
-      (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
-
-    return monthlyPayment;
-  };
+  const [amortizationData, setAmortizationData] = useState<amortizationData[]>(
+    [],
+  );
 
   const onSubmit = (data: MortgageFormData) => {
     const monthlyPayment = calculateMonthlyPayment(data);
+    const amortizationTable = calculateSchedule(data);
+    setAmortizationData(amortizationTable);
     setPayment(monthlyPayment);
+    console.log("test", amortizationData);
   };
 
   return (
@@ -42,29 +33,37 @@ export const CalculatorForm = () => {
             <span className="label-text">Loan Amount ($)</span>
           </label>
           <input
-            className="input input-bordered w-full max-w-xs"
+            className={`input input-bordered w-full max-w-xs ${
+              errors.loanAmount && "input-accent"
+            }`}
             type="number"
             {...register("loanAmount", { required: true })}
           />
           <label>
             {errors.loanAmount && (
-              <span className="label-text-alt">Loan Amount is required</span>
+              <span className="label-text-alt text-red-500">
+                Loan Amount is required
+              </span>
             )}
           </label>
         </div>
         <div className="form-control w-full max-w-xs">
           <label className="label">
-            <span className="label-text">Interest Rate</span>
+            <span className="label-text">Interest Rate (%)</span>
           </label>
           <input
-            className="input input-bordered w-full max-w-xs"
+            className={`input input-bordered w-full max-w-xs ${
+              errors.loanAmount && "input-accent"
+            }`}
             type="number"
             step={0.01}
             {...register("interestRate", { required: true })}
           />
           <label>
             {errors.interestRate && (
-              <span className="label-text-alt">Interest Rate is required</span>
+              <span className="label-text-alt text-red-500">
+                Interest Rate is required
+              </span>
             )}
           </label>
         </div>
@@ -73,13 +72,17 @@ export const CalculatorForm = () => {
             <span className="label-text">Loan Term</span>
           </label>
           <input
-            className="input input-bordered w-full max-w-xs"
+            className={`input input-bordered w-full max-w-xs ${
+              errors.loanAmount && "input-accent"
+            }`}
             type="number"
             {...register("loanTerm", { required: true })}
           />
           <label>
             {errors.loanTerm && (
-              <span className="label-text-alt">Loan Term is required</span>
+              <span className="label-text-alt text-red-500">
+                Loan Term is required
+              </span>
             )}
           </label>
         </div>
