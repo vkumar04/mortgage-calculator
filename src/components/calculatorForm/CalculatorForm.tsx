@@ -4,7 +4,13 @@ import { MortgageFormData, amortizationData } from "../../types";
 import { calculateSchedule } from "../../util/calculateSchedule";
 import { calculateMonthlyPayment } from "../../util/monthlyPayment";
 
-export const CalculatorForm = () => {
+interface CalculatorFormProps {
+  setAmortizationData: (amortizationData: amortizationData[]) => void;
+}
+
+export const CalculatorForm = ({
+  setAmortizationData,
+}: CalculatorFormProps) => {
   const {
     register,
     handleSubmit,
@@ -12,16 +18,12 @@ export const CalculatorForm = () => {
   } = useForm<MortgageFormData>();
 
   const [payment, setPayment] = useState<number>(0);
-  const [amortizationData, setAmortizationData] = useState<amortizationData[]>(
-    [],
-  );
 
   const onSubmit = (data: MortgageFormData) => {
     const monthlyPayment = calculateMonthlyPayment(data);
     const amortizationTable = calculateSchedule(data);
     setAmortizationData(amortizationTable);
     setPayment(monthlyPayment);
-    console.log("test", amortizationData);
   };
 
   return (
