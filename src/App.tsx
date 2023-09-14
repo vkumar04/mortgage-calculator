@@ -12,8 +12,14 @@ function App() {
   return (
     <>
       <Navigation title="Mortgage Calculator" />
-      <CalculatorForm setAmortizationData={setAmortizationData} />
-      <DataTable amortizationData={amortizationData} />
+      <div className="grid grid-cols-6 gap-2 p-6">
+        <div className="col-span-2">
+          <CalculatorForm setAmortizationData={setAmortizationData} />
+        </div>
+        <div className="col-span-4">
+          <DataTable amortizationData={amortizationData} />
+        </div>
+      </div>
     </>
   );
 }

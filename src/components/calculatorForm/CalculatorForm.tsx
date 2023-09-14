@@ -27,7 +27,7 @@ export const CalculatorForm = ({
   };
 
   return (
-    <div className="p-4">
+    <div>
       <h1>Mortgage Calculator</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-control w-full max-w-xs">
