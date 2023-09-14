@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { MortgageFormData, amortizationData } from "../../types";
 import { calculateSchedule } from "../../util/calculateSchedule";
 import { calculateMonthlyPayment } from "../../util/monthlyPayment";
+import { HistoryList } from "../historyList/HistoryList";
 
 interface CalculatorFormProps {
   setAmortizationData: (amortizationData: amortizationData[]) => void;
@@ -14,12 +15,27 @@ export const CalculatorForm = ({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<MortgageFormData>();
 
   const [payment, setPayment] = useState<number>(0);
+  const [history, setHistory] = useState<MortgageFormData[]>([]);
 
   const onSubmit = (data: MortgageFormData) => {
+    const monthlyPayment = calculateMonthlyPayment(data);
+    const amortizationTable = calculateSchedule(data);
+    setAmortizationData(amortizationTable);
+    setPayment(monthlyPayment);
+    const newHistory = [...history, { ...data, result: monthlyPayment }];
+    setHistory(newHistory);
+    localStorage.setItem("mortgageHistory", JSON.stringify(newHistory));
+  };
+
+  const recalculateMortgage = (data: MortgageFormData) => {
+    setValue("loanAmount", data.loanAmount);
+    setValue("interestRate", data.interestRate);
+    setValue("loanTerm", data.loanTerm);
     const monthlyPayment = calculateMonthlyPayment(data);
     const amortizationTable = calculateSchedule(data);
     setAmortizationData(amortizationTable);
@@ -71,7 +87,7 @@ export const CalculatorForm = ({
         </div>
         <div className="form-control w-full max-w-xs">
           <label className="label">
-            <span className="label-text">Loan Term</span>
+            <span className="label-text">Loan Term (in months)</span>
           </label>
           <input
             className={`input input-bordered w-full max-w-xs ${
@@ -98,6 +114,10 @@ export const CalculatorForm = ({
           <p className="text-2xl">${payment.toFixed(2)}</p>
         </div>
       )}
+      <HistoryList
+        history={history}
+        recalculateMortgage={recalculateMortgage}
+      />
     </div>
   );
 };
