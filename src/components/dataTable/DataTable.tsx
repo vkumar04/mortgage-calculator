@@ -12,20 +12,7 @@ interface DataTableProps {
 }
 
 export const DataTable = ({ amortizationData }: DataTableProps) => {
-  const tableData = useMemo(() => {
-    return amortizationData.map((row) => {
-      return {
-        month: row.month,
-        payment: row.payment,
-        principal: row.principal,
-        interest: row.interest,
-        balance: row.balance,
-      };
-    });
-  }, [amortizationData]);
-
   const columnHelper = createColumnHelper<amortizationData>();
-
   const columns = useMemo(
     () => [
       columnHelper.accessor("month", {
@@ -54,12 +41,12 @@ export const DataTable = ({ amortizationData }: DataTableProps) => {
 
   const table = useReactTable({
     columns,
-    data: tableData,
+    data: amortizationData,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  if (tableData.length === 0) {
+  if (amortizationData.length === 0) {
     return <div>Fill out the form to display table</div>;
   }
 
@@ -93,6 +80,26 @@ export const DataTable = ({ amortizationData }: DataTableProps) => {
           ))}
         </tbody>
       </table>
+      <div className="join join-vertical mt-4 lg:join-horizontal">
+        <button
+          className="btn btn-primary join-item"
+          onClick={() => table.setPageIndex(0)}
+        >
+          First Page
+        </button>
+        <button className="btn join-item" onClick={() => table.nextPage()}>
+          Next Page
+        </button>
+        <button className="btn join-item" onClick={() => table.previousPage()}>
+          Prev Page
+        </button>
+        <button
+          className="btn btn-primary join-item"
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+        >
+          Last Page
+        </button>
+      </div>
     </div>
   );
 };
