@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@tanstack/react-table':
+    specifier: ^8.9.9
+    version: 8.9.9(react-dom@18.2.0)(react@18.2.0)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -499,6 +502,23 @@ packages:
   /@swc/types@0.1.4:
     resolution: {integrity: sha512-z/G02d+59gyyUb7KYhKi9jOhicek6QD2oMaotUyG+lUkybpXoV49dY9bj7Ah5Q+y7knK2jU67UTX9FyfGzaxQg==}
     dev: true
+
+  /@tanstack/react-table@8.9.9(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-BzffnRo4+4wNa7OFnOxw6Dgq3jFvkfvZBqg1janXfZobo0VRmMMI8KNVu/WRkescr1VWbrGUDKzEzEe3L1veKw==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@tanstack/table-core': 8.9.9
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/table-core@8.9.9:
+    resolution: {integrity: sha512-cv9J3qmIn5t9dljp19S3GDsqMyAVV5+XsvK2tbOezUV3WZW4xQzkpS20uMihHMlD8uup1v0i/OePGadz2TC2Eg==}
+    engines: {node: '>=12'}
+    dev: false
 
   /@types/json-schema@7.0.12:
     resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
