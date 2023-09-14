@@ -1,4 +1,10 @@
-import { flexRender, useReactTable } from "@tanstack/react-table";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { useMemo } from "react";
 import { amortizationData } from "../../types";
 interface DataTableProps {
@@ -9,7 +15,6 @@ export const DataTable = ({ amortizationData }: DataTableProps) => {
   const tableData = useMemo(() => {
     return amortizationData.map((row) => {
       return {
-        ...row,
         month: row.month,
         payment: row.payment,
         principal: row.principal,
@@ -19,46 +24,51 @@ export const DataTable = ({ amortizationData }: DataTableProps) => {
     });
   }, [amortizationData]);
 
-  const columns = [
-    {
-      header: "Month",
-      accessor: "month",
-    },
-    {
-      header: "Payment",
-      accessor: "payment",
-    },
-    {
-      header: "Principal",
-      accessor: "principal",
-    },
-    {
-      header: "Interest",
-      accessor: "interest",
-    },
-    {
-      header: "Balance",
-      accessor: "balance",
-    },
-  ];
+  const columnHelper = createColumnHelper<amortizationData>();
 
-  const dataTable = useReactTable({
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("month", {
+        header: "Month",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("payment", {
+        header: "Payment",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("principal", {
+        header: "Principal",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("interest", {
+        header: "Interest",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("balance", {
+        header: "Balance",
+        cell: (info) => info.getValue(),
+      }),
+    ],
+    [columnHelper],
+  );
+
+  const table = useReactTable({
     columns,
     data: tableData,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
-  console.log(dataTable);
-
-  if (amortizationData.length === 0) {
+  if (tableData.length === 0) {
     return <div>Fill out the form to display table</div>;
   }
 
   return (
     <div>
-      <h1>Table</h1>
-      <table className="table w-full">
+      <h1>Amortization Table</h1>
+      <table className="table table-zebra">
         <thead>
-          {dataTable.getHeaderGroups().map((headerGroup) => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th key={header.id}>
@@ -71,7 +81,17 @@ export const DataTable = ({ amortizationData }: DataTableProps) => {
             </tr>
           ))}
         </thead>
-        <tbody></tbody>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   );

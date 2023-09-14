@@ -12,11 +12,11 @@ function App() {
   return (
     <>
       <Navigation title="Mortgage Calculator" />
-      <div className="grid grid-cols-6 gap-2 p-6">
-        <div className="col-span-2">
+      <div className="grid grid-cols-6 gap-6 p-2">
+        <div className="col-span-1">
           <CalculatorForm setAmortizationData={setAmortizationData} />
         </div>
-        <div className="col-span-4">
+        <div className="col-span-5">
           <DataTable amortizationData={amortizationData} />
         </div>
       </div>
