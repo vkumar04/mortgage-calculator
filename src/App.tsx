@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CalculatorForm } from "./components/calculatorForm/CalculatorForm";
 import { DataTable } from "./components/dataTable/DataTable";
+import ErrorBoundary from "./components/errorBoundary/ErrorBoundary";
 import { Navigation } from "./components/navigation/Navigation";
 import { amortizationData } from "./types";
 
@@ -14,10 +15,14 @@ function App() {
       <Navigation title="Mortgage Calculator" />
       <div className="grid grid-cols-6 gap-6 p-2">
         <div className="col-span-1">
-          <CalculatorForm setAmortizationData={setAmortizationData} />
+          <ErrorBoundary>
+            <CalculatorForm setAmortizationData={setAmortizationData} />
+          </ErrorBoundary>
         </div>
         <div className="col-span-5">
-          <DataTable amortizationData={amortizationData} />
+          <ErrorBoundary>
+            <DataTable amortizationData={amortizationData} />
+          </ErrorBoundary>
         </div>
       </div>
     </>
